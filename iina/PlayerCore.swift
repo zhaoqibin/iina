@@ -233,13 +233,8 @@ class PlayerCore: NSObject {
     mpv.mpvInit()
   }
 
-  func startMPVOpenGLCB(_ videoView: VideoView) {
-    let mpvGLContext = mpv.mpvInitCB()
-    videoView.mpvGLContext = OpaquePointer(mpvGLContext)
-  }
-
   // unload main window video view
-  func unloadMainWindowVideoView() {
+  func unloadVideo() {
     guard mainWindow.isWindowLoaded else { return }
     mainWindow.videoView.uninit()
   }
@@ -249,7 +244,7 @@ class PlayerCore: NSObject {
     guard !isMpvTerminated else { return }
     savePlaybackPosition()
     invalidateTimer()
-    unloadMainWindowVideoView()
+    unloadVideo()
     if sendQuit {
       mpv.mpvQuit()
     }

@@ -22,8 +22,9 @@ class VideoView: NSView {
   var videoSize: NSSize?
 
   var isUninited = false
-
   var uninitLock = NSLock()
+
+  var link: CVDisplayLink?
 
   // MARK: - Attributes
 
@@ -92,5 +93,42 @@ class VideoView: NSView {
   override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
     return player.openFromPasteboard(sender)
   }
+
+  // MARK: Display link
+
+  func startDisplayLink() {
+    guard let window = window else { return }
+    let displayId = UInt32(window.screen!.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as! Int)
+    CVDisplayLinkCreateWithActiveCGDisplays(&link)
+    guard let link = link else {
+      Utility.fatal("Cannot Create display link!")
+    }
+    CVDisplayLinkSetCurrentCGDisplay(link, displayId)
+    CVDisplayLinkSetOutputCallback(link, displayLinkCallback, mutableRawPointerOf(obj: player.mpv))
+    CVDisplayLinkStart(link)
+  }
+
+  func stopDisplaylink() {
+    guard let link = link, CVDisplayLinkIsRunning(link) else { return }
+    CVDisplayLinkStop(link)
+  }
+
+  func updateDisplaylink() {
+    guard let window = window, let link = link else { return }
+    let displayId = UInt32(window.screen!.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as! Int)
+    CVDisplayLinkSetCurrentCGDisplay(link, displayId)
+  }
   
 }
+
+fileprivate func displayLinkCallback(
+  _ displayLink: CVDisplayLink, _ inNow: UnsafePointer<CVTimeStamp>,
+  _ inOutputTime: UnsafePointer<CVTimeStamp>,
+  _ flagsIn: CVOptionFlags,
+  _ flagsOut: UnsafeMutablePointer<CVOptionFlags>,
+  _ context: UnsafeMutableRawPointer?) -> CVReturn {
+  let mpv = unsafeBitCast(context, to: MPVController.self)
+  mpv.mpvReportSwap()
+  return kCVReturnSuccess
+}
+

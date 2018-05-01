@@ -592,10 +592,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     // gesture recognizer
     cv.addGestureRecognizer(magnificationGestureRecognizer)
 
-    // init mpv render context.
-    // The video layer must be displayed once to get the OpenGL context initialized.
-    videoView.videoLayer.display()
-    player.mpv.mpvInitRendering()
+    player.initVideo()
 
     // init quick setting view now
     let _ = quickSettingView
@@ -652,6 +649,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
         }
       }
       self.cachedScreenCount = screenCount
+      self.videoView.updateDisplaylink()
     }
 
   }

@@ -147,10 +147,6 @@ class ViewLayer: CAOpenGLLayer {
 
     CGLUnlockContext(ctx)
     videoView.uninitLock.unlock()
-
-    if let context = mpv.mpvRenderContext {
-      mpv_render_context_report_swap(context)
-    }
   }
 
   func draw() {

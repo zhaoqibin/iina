@@ -133,11 +133,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let (version, build) = Utility.iinaVersion()
     print("IINA \(version) Build \(build)")
 
+    #if !DEBUG
     guard !iinaArgFilenames.isEmpty || commandLineStatus.isStdin else {
       print("This binary is not intended for being used as a command line tool. Please use the bundled iina-cli.")
       print("Please ignore this message if you are running in a debug environment.")
       return
     }
+    #endif
 
     shouldIgnoreOpenFile = true
     commandLineStatus.isCommandLine = true

@@ -66,7 +66,7 @@ class InitialWindowController: NSWindowController {
 
     recentFilesTableView.delegate = self
     recentFilesTableView.dataSource = self
-    
+
     if #available(macOS 10.14, *) {
       visualEffectView.material = .underWindowBackground
     }

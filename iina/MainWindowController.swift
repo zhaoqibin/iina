@@ -446,13 +446,13 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
   @IBOutlet weak var rightArrowButton: NSButton!
   @IBOutlet weak var settingsButton: NSButton!
   @IBOutlet weak var playlistButton: NSButton!
-	@IBOutlet weak var sideBarView: NSVisualEffectView! {
-		didSet {
+  @IBOutlet weak var sideBarView: NSVisualEffectView! {
+    didSet {
       if #available(OSX 10.11, *) {
         sideBarView.material = .sidebar
       }
-		}
-	}
+    }
+  }
   @IBOutlet weak var bottomView: NSView!
   @IBOutlet weak var bufferIndicatorView: NSVisualEffectView!
   @IBOutlet weak var bufferProgressLabel: NSTextField!
